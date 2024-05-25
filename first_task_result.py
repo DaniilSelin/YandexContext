@@ -1,9 +1,19 @@
 import sys
 import logging
+import os
+from datetime import datetime
 
+# Создаем директорию для логов, если она не существует
+log_dir = "log"
+log_subdir = f"{sys.argv[0][:-3]}_log"
+log_path = os.path.join(log_dir, log_subdir)
+os.makedirs(log_path, exist_ok=True)
 
 # Настройка логирования
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+log_file = os.path.join(log_path, f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_log.txt")
+logging.basicConfig(level=logging.DEBUG, filename=log_file, filemode='w',
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 # Читаем входные данные
 b, c = sys.stdin.readline().split()
@@ -11,6 +21,10 @@ r, d = sys.stdin.readline().split()
 
 b, c = int(b), int(c)
 r, d = int(r), int(d)
+
+# Логируем входные данные
+logging.debug(f'Input: b={b}, c={c}, r={r}, d={d}')
+
 
 count = 0
 
@@ -95,5 +109,7 @@ while z >= r:
 
     z = b * (10 ** 6) + c
 
-print(count)
+# Логируем выходные данные
+logging.debug(f'Output: count= {count}')
 
+print(count)

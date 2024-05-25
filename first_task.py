@@ -34,5 +34,4 @@ while z >= r:
                 else:
                     break
     z = b * (10 ** 6) + c
-
 print(count)
