@@ -20,7 +20,7 @@ class Testing(unittest.TestCase):
             input_value = input_recomande(input_set["input"])
             expected_output = input_set["expected_output"]
 
-            with self.subTest(input_valuse= input_value):
+            with self.subTest(input_valuse=input_value):
                 result = subprocess.run(
                     ['/usr/bin/python3', name_test_file],
                     input=input_value,
