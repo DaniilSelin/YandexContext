@@ -6,7 +6,7 @@ def input_recomande(input_set: list) -> str:
     input_set = f"{input_set[0]} {input_set[1]}\n{input_set[2]} {input_set[3]}\n"
     return input_set
 
-with open('.github/workflows/test_data.json', 'r') as file:
+with open('workflows/test_data.json', 'r') as file:
     test_cases = json.load(file)
 
 name_test_file = input('the full name of the file to be tested: ')
