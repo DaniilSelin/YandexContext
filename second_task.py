@@ -1,99 +1,96 @@
-import sys
-import logging
+from itertools import combinations
 
+def Up(l):
+    for i in range(len(l) - 1):
+        if l[i] > l[i + 1]:
+            return False
+    return True
 
-# Настройка логирования
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+def Down(l):
+    for i in range(len(l) - 1):
+        if l[i] < l[i + 1]:
+            return False
+    return True
 
-# Читаем входные данные
-b, c = sys.stdin.readline().split()
-r, d = sys.stdin.readline().split()
+n = int(input())
+l = list(map(int, input().split(" ")))
 
-b, c = int(b), int(c)
-r, d = int(r), int(d)
+comb1 = []
+for k in range(2, n + 1):
+    for el in combinations(l, k):
+        comb1.append(el)
+comb2 = [x for x in comb1]
 
-count = 0
-
-"""
-10000000 100000000
-1100000 0"""
-
-z = b * (10 ** 6) + c
-
-while z >= r:
-    logging.debug(f'Starting buy_bottle with b={b}, c={c}, r={r}, d={d}, count={count}')
-
-    if c >= r:
-        count_add = c // r
-        d += count_add * r
-        c -= count_add * r
-
-        count += count_add
-        logging.debug(f'After buying with c >= r: count_add={count_add}, b={b}, c={c}, d={d}, count={count}')
-
-    b_needs = r // 10 ** 6
-
-    if r % 10**6 == 0:
-        count_add = (b*10**6)//r
-        b -= count_add * (r//10**6)
-        count += count_add
-
-
-        if b*10**6 + c >= r:
-            count += 1
-
-        break
-
-    if b_needs * 10 ** 6 + 10**6 - 1 >= r and b_needs * 10 ** 6 + c >= r:
-
-        c_rep = c // (r % 10**6)
-        b_needs_rep = c_rep * b_needs
-        logging.debug(
-            f'Before while c_rep= {c_rep}, b_needs= {b_needs}')
-
-        if b_needs_rep > b:
-            b_needs_rep = b//b_needs
-
-        logging.debug(
-            f'Before while c_rep= {c_rep}, b_needs= {b_needs}')
-
-        count_add = (b_needs_rep * 10 ** 6 + c) // r
-        b -= b_needs_rep
-        c_drop = c - (b_needs_rep * 10 ** 6 + c - r * count_add)
-        count += count_add
-        c -= c_drop
-        d += c_drop
-
-        logging.debug(
-            f'After buying with b_needs <= b and b_needs*10**6 + c >= r: count_add={count_add}, b={b}, c={c}, d={d}, count={count}, c_drop={c_drop}, b_needs={b_needs}')
-    elif b_needs + 1 <= b:
-
-        b_needs += 1
-        c_drop_rep = d//(b_needs*1000000- r)
-
-        if c_drop_rep == 0:
-            break
-
-        b_needs_rep = b_needs * c_drop_rep
-
-        if b_needs_rep > b:
-            c_drop_rep = b//b_needs
-            b_needs_rep = b
-
-        c += c_drop_rep * (b_needs*1000000 - r)
-        d -= c_drop_rep * (b_needs*1000000 - r)
-
-        b -= b_needs_rep
-
-        count += c_drop_rep
-
-        logging.debug(
-            f'After increasing b_needs and checking d: count_add={count_add}, b={b}, c={c}, d={d}, count={count}, c_drop={c_drop_rep}')
+i = 0
+while i < len(comb1):
+    if not Up(comb1[i]):
+        comb1.remove(comb1[i])
     else:
-        logging.debug(f'Cannot proceed: b_needs > b')
-        break
+        i += 1
+i = 0
+while i < len(comb2):
+    if not Down(comb2[i]):
+        comb2.remove(comb2[i])
+    else:
+        i += 1
 
-    z = b * (10 ** 6) + c
+comb1 = comb1[::-1]
+comb2 = comb2[::-1]
 
-print(count)
+fl = 0
+NVP = []
+NUP = []
+for el1 in comb1:
+    for el2 in comb2:
+        f = 0
+        for k in el1:
+            if k in el2:
+                f = 1
+                break
+        if f:
+            continue
+        else:
+            NVP.append(list(el1))
+            NUP.append(list(el2))
 
+if NVP:
+    if len(NVP) == 1:
+        print(len(NVP[0]))
+        NVP_ind = []
+        for el in NVP[0]:
+            NVP_ind.append(l.index(el) + 1)
+        print(*NVP_ind)
+        print(len(NUP[0]))
+        NUP_ind = []
+        for el in NUP[0]:
+            NUP_ind.append(l.index(el) + 1)
+        print(*NUP_ind)
+    else:
+        if len(NVP[0]) > len(NUP[1]):
+            print(len(NVP[0]))
+            NVP_ind = []
+            for el in NVP[0]:
+                NVP_ind.append(l.index(el) + 1)
+            print(*NVP_ind)
+            print(len(NUP[0]))
+            NUP_ind = []
+            for el in NUP[0]:
+                NUP_ind.append(l.index(el) + 1)
+            print(*NUP_ind)
+        else:
+            max_len = []
+            for i in range(len(NVP)):
+                max_len = len(NVP[i]) + len(NUP[i])
+            k = max_len.index(max(max_len))
+            print(len(NVP[k]))
+            NVP_ind = []
+            for el in NVP[k]:
+                NVP_ind.append(l.index(el) + 1)
+            print(*NVP_ind)
+            print(len(NUP[k]))
+            NUP_ind = []
+            for el in NUP[k]:
+                NUP_ind.append(l.index(el) + 1)
+            print(*NUP_ind)
+else:
+    print("IMPOSSIBLE")
