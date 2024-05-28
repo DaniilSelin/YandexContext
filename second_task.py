@@ -37,7 +37,6 @@ while i < len(comb2):
 comb1 = comb1[::-1]
 comb2 = comb2[::-1]
 
-fl = 0
 NVP = []
 NUP = []
 for el1 in comb1:
